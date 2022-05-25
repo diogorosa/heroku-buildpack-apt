@@ -87,8 +87,12 @@ for PACKAGE in $(cat $BUILD_DIR/Aptfile | grep -v -s -e '^#' | grep -v -s -e "^:
 
     topic "Fetching $PACKAGE"
     curl --silent --show-error --fail -L -z $PACKAGE_FILE -o $PACKAGE_FILE $PACKAGE 2>&1 | indent
+  elif [[ $PACKAGE =~ "eol" ]]; then
+    echo "closing fetch $PACKAGE"
   else
     topic "Fetching .debs for $PACKAGE"
+    topic "current options $APT_OPTIONS $APT_FORCE_YES"
+
     apt-get $APT_OPTIONS -y $APT_FORCE_YES -d install --reinstall $PACKAGE | indent
   fi
 done
